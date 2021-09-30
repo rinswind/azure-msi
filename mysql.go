@@ -24,14 +24,14 @@ func NewMySQLWrapperDriver() *MySQLWrapperDriver {
 	}
 }
 
-func (driv *MySQLWrapperDriver) Open(dsn string) (driver.Conn, error) {
+func (drv *MySQLWrapperDriver) Open(dsn string) (driver.Conn, error) {
 	log.Printf("Opening connection: %v", dsn)
 
-	atr, err := driv.msiClient.RequestToken()
+	atr, err := drv.msiClient.RequestToken()
 	if err != nil {
 		return nil, err
 	}
-	logger.Printf("Got token: %v", atr)
+	log.Printf("Got token: %v", atr)
 
 	// Update the config with the MSI token for password
 	config, err := mysql.ParseDSN(dsn)
@@ -41,5 +41,5 @@ func (driv *MySQLWrapperDriver) Open(dsn string) (driver.Conn, error) {
 	config.Passwd = atr.AccessToken
 	config.AllowCleartextPasswords = true
 
-	return driv.delegate.Open(config.FormatDSN())
+	return drv.delegate.Open(config.FormatDSN())
 }
